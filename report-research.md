@@ -916,4 +916,4 @@ RAG/知识库      █████████████████░░░ 
 ---
 
 *报告完成于 2026-03-24*
-*调研 Agent: Research-Agent (Xavier)*
+*调研 Agent: Research-Agent (Chaoyang R\u0026D)*

@@ -1,6 +1,6 @@
 # AI 驱动的 GitHub 项目文档管理方案
 
-**调研团队**: Xavier R&D Center  
+**调研团队**: Chaoyang R&D  
 **调研时间**: 2026-03-24 ~ 2026-03-25  
 **报告版本**: v1.0
 
@@ -53,9 +53,9 @@ cp -r poc-a-github/.github/ your-repo/
 ## 代码示例
 
 ### 方案 A: GitHub Actions
-- [Issue 自动标签](poc-a-github/.github/workflows/ai-labeler.yml)
-- [PR 自动总结](poc-a-github/.github/workflows/ai-pr-summary.yml)
-- [文档更新提醒](poc-a-github/.github/workflows/doc-reminder.yml)
+- [Issue 自动标签](https://github.com/chaoyang-rnd-center/ai-docs-research/blob/main/poc-a-github/.github/workflows/ai-labeler.yml)
+- [PR 自动总结](https://github.com/chaoyang-rnd-center/ai-docs-research/blob/main/poc-a-github/.github/workflows/ai-pr-summary.yml)
+- [文档更新提醒](https://github.com/chaoyang-rnd-center/ai-docs-research/blob/main/poc-a-github/.github/workflows/doc-reminder.yml)
 
 ### 方案 B: RAG 知识库
 - [基础 RAG 实现](poc-b-rag/rag-simple.js)
@@ -94,7 +94,7 @@ cp -r poc-a-github/.github/ your-repo/
 
 ## 联系
 
-如有问题，联系 **Xavier** (Xavier R&D Center Director)
+如有问题，联系 **Chaoyang R&D**
 
 ---
 

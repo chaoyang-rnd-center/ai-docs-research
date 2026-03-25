@@ -29,7 +29,7 @@
 | 技术调研 | Research-Agent | report-research.md | 6:00 |
 | 流程设计 | Workflow-Agent | report-workflow.md | 6:00 |
 | 实践验证 | POC-Agent | report-poc.md | 6:00 |
-| 报告整合 | Xavier (Director) | final-report.md | 8:00 |
+| 报告整合 | Chaoyang R&D (Director) | final-report.md | 8:00 |
 
 ## 研究方向
 
@@ -69,7 +69,7 @@
 - 对比分析表
 - 推荐意见
 
-### 最终报告 (Xavier 整合)
+### 最终报告 (Chaoyang R&D 整合)
 - 执行摘要
 - 方案全景图
 - Top 3 推荐方案详解
@@ -81,5 +81,5 @@
 
 - **22:30**: 调研小组启动
 - **06:00**: 各小组提交初稿
-- **07:00**: Xavier 整合报告
+- **07:00**: Chaoyang R&D 整合报告
 - **08:00**: 向 Joe 交付最终报告

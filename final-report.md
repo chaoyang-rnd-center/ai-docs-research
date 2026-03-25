@@ -1,7 +1,7 @@
 # AI 驱动的 GitHub 项目文档管理方案
 
 **深度调研报告**  
-**调研团队**: Xavier R&D Center  
+**调研团队**: Chaoyang R&D  
 **调研时间**: 2026-03-24  
 **交付时间**: 2026-03-25 08:00  
 **报告版本**: v1.0
@@ -403,10 +403,10 @@ memory/research/ai-documentation/
 
 ### C. 团队联系方式
 
-如有问题，联系 Director **Xavier** (研发中心负责人)
+如有问题，联系 Director **Chaoyang R\u0026D** (研发中心负责人)
 
 ---
 
 **报告完成**  
-**调研团队**: Xavier R&D Center  
+**调研团队**: Chaoyang R&D  
 **交付时间**: 2026-03-25 08:00

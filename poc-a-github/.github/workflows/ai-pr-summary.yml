@@ -1,0 +1,122 @@
+name: AI PR Summary
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  summarize-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Generate PR Summary
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          
+          // Get changed files
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: pr.number
+          });
+          
+          // Analyze changes
+          const stats = {
+            additions: files.reduce((sum, f) => sum + f.additions, 0),
+            deletions: files.reduce((sum, f) => sum + f.deletions, 0),
+            changed: files.length
+          };
+          
+          // Categorize files
+          const categories = {
+            docs: files.filter(f => f.filename.match(/\.(md|rst|txt)$/i) || 
+                                f.filename.includes('docs/')),
+            src: files.filter(f => f.filename.match(/\.(js|ts|py|go|rs|java)$/i)),
+            test: files.filter(f => f.filename.includes('test') || 
+                               f.filename.includes('spec')),
+            config: files.filter(f => f.filename.match(/\.(json|yml|yaml|toml)$/i) ||
+                                  f.filename.includes('.github/'))
+          };
+          
+          // Build summary
+          let summary = `## 🤖 AI PR Summary\n\n`;
+          summary += `**Changes:** +${stats.additions} -${stats.deletions} in ${stats.changed} files\n\n`;
+          
+          summary += `### 📁 Files by Category\n`;
+          for (const [cat, items] of Object.entries(categories)) {
+            if (items.length > 0) {
+              summary += `- **${cat}**: ${items.length} files\n`;
+            }
+          }
+          
+          summary += `\n### 📝 Key Changes\n`;
+          const significant = files
+            .filter(f => f.status !== 'unchanged')
+            .slice(0, 10);
+          
+          for (const file of significant) {
+            const icon = file.status === 'added' ? '➕' : 
+                        file.status === 'removed' ? '➖' : '✏️';
+            summary += `- ${icon} \`${file.filename}\` (+${file.additions}/-${file.deletions})\n`;
+          }
+          
+          // Add size label
+          const size = stats.additions + stats.deletions < 50 ? 'XS' :
+                      stats.additions + stats.deletions < 200 ? 'S' :
+                      stats.additions + stats.deletions < 500 ? 'M' :
+                      stats.additions + stats.deletions < 1000 ? 'L' : 'XL';
+          
+          summary += `\n### 📊 Size\n`;
+          summary += `This PR is **${size}** (\`${stats.additions + stats.deletions}\` lines changed)\n\n`;
+          
+          // Add suggestions
+          summary += `### 💡 Suggestions\n`;
+          if (stats.additions + stats.deletions > 500 && !pr.requested_reviewers.length) {
+            summary += `- Consider requesting reviews due to PR size\n`;
+          }
+          if (categories.test.length === 0 && categories.src.length > 0) {
+            summary += `- No test files detected - consider adding tests\n`;
+          }
+          if (categories.docs.length === 0 && categories.src.some(f => f.filename.includes('api'))) {
+            summary += `- API changes detected - update documentation if needed\n`;
+          }
+          
+          // Post or update comment
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: pr.number
+          });
+          
+          const botComment = comments.find(c => 
+            c.user.login === 'github-actions[bot]' && 
+            c.body.includes('🤖 AI PR Summary')
+          );
+          
+          if (botComment) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: summary
+            });
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: summary
+            });
+          }
+          
+          console.log('PR summary generated successfully');

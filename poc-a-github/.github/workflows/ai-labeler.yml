@@ -1,0 +1,76 @@
+name: AI Issue Labeler
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  label-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Analyze and Label Issue
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const issue = context.payload.issue;
+          const title = issue.title.toLowerCase();
+          const body = (issue.body || '').toLowerCase();
+          const text = title + ' ' + body;
+          
+          // Simple keyword-based labeling (production would use GPT/Claude)
+          const labels = [];
+          
+          // Bug detection
+          if (text.includes('bug') || text.includes('error') || 
+              text.includes('crash') || text.includes('broken')) {
+            labels.push('bug');
+          }
+          
+          // Feature request
+          if (text.includes('feature') || text.includes('request') || 
+              text.includes('add') || text.includes('support')) {
+            labels.push('enhancement');
+          }
+          
+          // Documentation
+          if (text.includes('doc') || text.includes('readme') || 
+              text.includes('documentation')) {
+            labels.push('documentation');
+          }
+          
+          // Help wanted
+          if (text.includes('help') || text.includes('question') || 
+              text.includes('how to')) {
+            labels.push('help wanted');
+          }
+          
+          // Priority labels
+          if (text.includes('urgent') || text.includes('critical') || 
+              text.includes('blocker')) {
+            labels.push('priority: high');
+          }
+          
+          if (labels.length > 0) {
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: labels
+            });
+            console.log(`Added labels: ${labels.join(', ')}`);
+          } else {
+            // Default label for uncategorized issues
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: ['triage']
+            });
+            console.log('Added default label: triage');
+          }

@@ -1,0 +1,111 @@
+{
+  "timestamp": "2026-03-24T15:36:46.809Z",
+  "stats": {
+    "documents": 5,
+    "sections": 21,
+    "queries": 8,
+    "passed": 5,
+    "accuracy": "62.5"
+  },
+  "results": [
+    {
+      "query": "如何部署到生产环境",
+      "expected": [
+        "部署指南"
+      ],
+      "found": [
+        "系统架构概述",
+        "部署指南",
+        "API 认证文档"
+      ],
+      "passed": true
+    },
+    {
+      "query": "JWT token 怎么使用",
+      "expected": [
+        "API 认证文档"
+      ],
+      "found": [
+        "API 认证文档",
+        "系统架构概述",
+        "部署指南"
+      ],
+      "passed": true
+    },
+    {
+      "query": "数据库查询慢怎么办",
+      "expected": [
+        "性能优化指南",
+        "故障排查手册"
+      ],
+      "found": [
+        "系统架构概述",
+        "部署指南",
+        "API 认证文档"
+      ],
+      "passed": false
+    },
+    {
+      "query": "内存溢出怎么排查",
+      "expected": [
+        "故障排查手册"
+      ],
+      "found": [
+        "系统架构概述",
+        "部署指南",
+        "API 认证文档"
+      ],
+      "passed": false
+    },
+    {
+      "query": "Redis 缓存配置",
+      "expected": [
+        "性能优化指南",
+        "部署指南"
+      ],
+      "found": [
+        "系统架构概述",
+        "性能优化指南",
+        "部署指南"
+      ],
+      "passed": true
+    },
+    {
+      "query": "Kubernetes 部署步骤",
+      "expected": [
+        "部署指南",
+        "系统架构概述"
+      ],
+      "found": [
+        "系统架构概述",
+        "部署指南",
+        "故障排查手册"
+      ],
+      "passed": true
+    },
+    {
+      "query": "用户登录接口",
+      "expected": [
+        "API 认证文档"
+      ],
+      "found": [
+        "系统架构概述",
+        "部署指南",
+        "API 认证文档"
+      ],
+      "passed": true
+    },
+    {
+      "query": "连接池满了",
+      "expected": [
+        "故障排查手册"
+      ],
+      "found": [
+        "系统架构概述",
+        "部署指南",
+        "API 认证文档"
+      ],
+      "passed": false
+    }
+  ]
+}

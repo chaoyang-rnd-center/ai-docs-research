@@ -1,0 +1,5 @@
+# 使用 Jekyll 的 GitHub Pages 配置
+theme: jekyll-theme-cayman
+title: "AI 文档管理调研报告"
+description: "Xavier R&D Center - AI 驱动的 GitHub 项目文档管理最佳实践深度调研"
+show_downloads: true

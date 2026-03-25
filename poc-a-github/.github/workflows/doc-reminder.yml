@@ -1,0 +1,104 @@
+name: Documentation Update Reminder
+
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'src/**'
+      - 'lib/**'
+      - 'app/**'
+      - '**.js'
+      - '**.ts'
+      - '**.py'
+      - '**.go'
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Check documentation status
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          
+          // Get changed files
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: pr.number
+          });
+          
+          // Check for source code changes
+          const codeFiles = files.filter(f => 
+            f.filename.match(/\.(js|ts|py|go|rs|java|rb|php)$/i) &&
+            !f.filename.includes('test') &&
+            !f.filename.includes('spec')
+          );
+          
+          // Check for doc changes in this PR
+          const docChanges = files.filter(f => 
+            f.filename.match(/\.(md|rst)$/i) ||
+            f.filename.includes('docs/')
+          );
+          
+          // Check for API-related changes
+          const apiChanges = codeFiles.filter(f => 
+            f.filename.toLowerCase().includes('api') ||
+            f.filename.includes('route') ||
+            f.filename.includes('endpoint')
+          );
+          
+          const messages = [];
+          
+          // Code changes without docs
+          if (codeFiles.length > 0 && docChanges.length === 0) {
+            messages.push({
+              type: 'warning',
+              title: '📚 Documentation Check',
+              body: `This PR modifies ${codeFiles.length} source file(s) but doesn't update documentation.`
+            });
+          }
+          
+          // API changes warning
+          if (apiChanges.length > 0) {
+            messages.push({
+              type: 'important',
+              title: '🔌 API Changes Detected',
+              body: 'API modifications detected. Please ensure:\n- API documentation is updated\n- Changelog is updated\n- Breaking changes are documented'
+            });
+          }
+          
+          // Post reminder if needed
+          if (messages.length > 0) {
+            let body = `## 🔔 Documentation Reminder\n\n`;
+            
+            for (const msg of messages) {
+              body += `### ${msg.title}\n${msg.body}\n\n`;
+            }
+            
+            body += `---\n\n`;
+            body += `**Checklist:**\n`;
+            body += `- [ ] Code changes are documented\n`;
+            body += `- [ ] README updated if needed\n`;
+            body += `- [ ] API docs updated (if applicable)\n`;
+            body += `- [ ] Changelog updated\n\n`;
+            body += `*This is an automated reminder. Mark items as complete when done.*`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: body
+            });
+            
+            console.log('Documentation reminder posted');
+          } else {
+            console.log('No documentation reminder needed');
+          }
